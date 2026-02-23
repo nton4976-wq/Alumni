@@ -425,6 +425,26 @@ a[download]{ text-decoration:none; color:inherit; }
 
 /* Optional: slightly tighter shadow to reduce perceived bulk */
 .card-face { box-shadow: 0 6px 12px rgba(2,6,23,0.06) !important; }
+
+
+/* Reduce side margins on very wide screens (e.g. 1920x1080) */
+@media (min-width: 1920px) {
+  /* increase max width so content fills more of the screen */
+  :root { --app-max-width: 1800px; }
+
+  /* tighten horizontal padding on the container */
+  .app-container{
+    max-width: var(--app-max-width);
+    padding-left: 1.25rem;   /* was 2rem */
+    padding-right: 1.25rem;  /* was 2rem */
+  }
+
+  /* optional: slightly reduce body side padding if you want even less outer gutter */
+  body {
+    padding-left: 0.5rem;    /* was 2rem (vertical remains controlled by padding shorthand) */
+    padding-right: 0.5rem;
+  }
+}
     </style>
 </head>
 <body>
