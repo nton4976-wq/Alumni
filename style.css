@@ -1,262 +1,438 @@
-*{
-    box-sizing:border-box;
-    font-family: "Segoe UI", Arial, sans-serif;
+    :root{
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --secondary: #0ea5e9;
+  --bg-body: #f3f4f6;
+  --bg-card: rgba(255,255,255,0.95);
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --glass-border: rgba(255,255,255,0.5);
+  --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.12), 0 10px 10px -5px rgba(0,0,0,0.04);
+  --status-complete-bg: rgba(16,185,129,0.12);
+  --status-incomplete-bg: rgba(239,68,68,0.09);
+
+  /* Layout tuning */
+  --app-max-width: 1400px;
+  --gutter: 1rem;
+
+  /* Card sizing */
+  --card-min-height: 300px;
+  --card-min-height-mobile: 260px;
 }
 
+/* ---------- Reset & base ---------- */
+*{ box-sizing: border-box; margin:0; padding:0; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+html,body{ height:100%; }
 body{
-    margin:0;
-    background:#f3f5f7;
-    color:#333;
+  background-color: var(--bg-body);
+  background-image:
+    radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+  background-attachment: fixed;
+  color: var(--text-main);
+  min-height: 100vh;
+  line-height: 1.5;
+  padding: 2rem 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.container{
-    padding:25px 40px;
+/* ---------- App container & header ---------- */
+.app-container{ max-width: var(--app-max-width); margin: 0 auto; padding: 2rem; }
+header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; gap:1rem; flex-wrap:wrap; }
+.brand{ display:flex; align-items:center; gap:1rem; }
+.brand-icon{
+  width:48px; height:48px; border-radius:12px;
+  background: linear-gradient(135deg,rgba(106,90,249,0.8),rgba(143,123,255,0.8));
+  display:flex; align-items:center; justify-content:center; color:white; font-size:1.25rem; box-shadow:var(--shadow-md);
+  flex-shrink:0;
+}
+.brand h1{ font-size:1.25rem; font-weight:800; color:white; line-height:1; margin:0; }
+.brand span{ display:block; font-size:0.85rem; color:rgba(255,255,255,0.85); font-weight:600; }
+
+/* ---------- Controls bar ---------- */
+.controls-bar{
+  background: var(--bg-card);
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  padding: 1rem;
+  border:1px solid var(--glass-border);
+  box-shadow: var(--shadow-lg);
+  display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap; margin-bottom:1rem;
 }
 
-/* TITLE */
-.title{
-    font-size:22px;
-    font-weight:600;
-    margin-bottom:15px;
+/* Filter group and inputs */
+.filter-group{ display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; }
+.search-box{ position:relative; }
+.search-box input{
+  padding: 0.6rem 1rem 0.6rem 2.6rem;
+  border: 1px solid #e5e7eb;
+  border-radius:0.75rem;
+  width:280px;
+  font-size:0.92rem;
+  background:#f9fafb;
+  color:var(--text-main);
+  outline:none;
 }
+.search-box input::placeholder{ color:var(--text-muted); font-weight:600; }
+.search-box i{ position:absolute; left:0.9rem; top:50%; transform:translateY(-50%); color:var(--text-muted); pointer-events:none; }
 
-/* SEARCH */
-.topbar{
-    display:flex;
-    justify-content:flex-end;
-    margin-bottom:20px;
+/* selects, buttons */
+select, button{
+  padding: 0.55rem 0.9rem; border-radius:0.75rem; border:1px solid #e5e7eb; background:white; font-size:0.9rem; font-weight:600; cursor:pointer;
 }
+select:focus, button:focus{ outline:2px solid rgba(79,70,229,0.12); outline-offset:2px; }
 
-.search{
-    width:260px;
-    padding:10px 14px;
-    border-radius:6px;
-    border:1px solid #dcdcdc;
-    background:white;
-}
+/* primary button */
+.btn-primary{ background:var(--primary); color:white; border:none; display:inline-flex; gap:0.5rem; align-items:center; box-shadow:var(--shadow-sm); }
+.btn-primary:hover{ background:var(--primary-hover); }
 
-/* STATS */
-.stats{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
-    margin-bottom:25px;
-}
+/* icon circle button */
+.btn-icon{ width:40px; height:40px; padding:0; border-radius:50%; display:flex; align-items:center; justify-content:center; background:white; border:1px solid #e5e7eb; }
 
-.stat-card{
-    background:white;
-    padding:25px;
-    border-radius:12px;
-    text-align:center;
-    box-shadow:0 3px 10px rgba(0,0,0,0.05);
-}
-
-.stat-card h2{
-    margin:10px 0 5px;
-}
-
-.icon{
-    font-size:26px;
-    width:55px;
-    height:55px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin:auto;
-    color:white;
-}
-
-.blue{ background:#3b82f6; }
-.green{ background:#22c55e; }
-.yellow{ background:#f59e0b; }
-.cyan{ background:#06b6d4; }
-
-/* FILTERS */
-.filters{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.tabs button{
-    padding:8px 14px;
-    border:1px solid #d8d8d8;
-    background:white;
-    border-radius:6px;
-    cursor:pointer;
-}
-
-.tabs .active{
-    background:#3b82f6;
-    color:white;
-}
-
-.department{
-    padding:8px;
-    border-radius:6px;
-    border:1px solid #ccc;
-}
-
-.add-btn{
-    margin-left:auto;
-    background:#3b82f6;
-    color:white;
-    border:none;
-    padding:10px 15px;
-    border-radius:6px;
-    cursor:pointer;
-}
-
-/* ALPHABET */
-.alphabet{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    margin:20px 0;
-}
-
-.alphabet button{
-    border:1px solid #d8d8d8;
-    background:white;
-    padding:6px 10px;
-    border-radius:5px;
-    cursor:pointer;
-}
-
-.alphabet .active{
-    background:#3b82f6;
-    color:white;
-}
-
-/* CARDS */
-.cards{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:25px;
-}
-
-.card{
-    background:white;
-    padding:22px;
-    border-radius:14px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.06);
-    position:relative;
-    text-align:center;
-}
-
-.avatar{
-    width:70px;
-    height:70px;
-    border-radius:50%;
-    object-fit:cover;
-    margin-bottom:10px;
-}
-
-.role{
-    color:#6b7280;
-    margin-bottom:15px;
-}
-
-.info{
-    text-align:left;
-    font-size:14px;
-    color:#555;
-    margin-bottom:10px;
-}
-
-.info p{
-    margin:6px 0;
-}
-
-.badge{
-    position:absolute;
-    right:15px;
-    top:15px;
-    padding:4px 10px;
-    border-radius:10px;
-    font-size:12px;
-    color:white;
-}
-
-.team{ background:#16a34a; }
-.client{ background:#2563eb; }
-
-/* RATING */
-.rating{
-    color:#fbbf24;
-    margin:10px 0;
-    font-size:16px;
-}
-
-/* ACTION BUTTONS */
-.actions{
-    display:flex;
-    gap:8px;
-}
-
-.actions button{
-    flex:1;
-    padding:9px;
-    border-radius:6px;
-    border:1px solid #ccc;
-    cursor:pointer;
-}
-
-.view{ background:#e8f0ff; border-color:#3b82f6; color:#3b82f6;}
-.message{ background:#eafff1; border-color:#22c55e; color:#22c55e;}
-.call{ background:#e8faff; border-color:#06b6d4; color:#06b6d4;}
-
-
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.4);
-  justify-content:center;
+/* option-like buttons that reflect selection */
+.btn-option{
+  border-radius:0.75rem;
+  padding:0.55rem 0.9rem;
+  display:inline-flex;
+  gap:0.5rem;
   align-items:center;
-  z-index:999;
-}
-
-.modal-content{
+  min-width:130px;
   background:white;
-  padding:25px;
-  width:350px;
+  border:1px solid #e5e7eb;
+  font-weight:700;
+  transition: all .12s ease;
+}
+.btn-option.active{
+  background: linear-gradient(90deg, rgba(79,70,229,0.12), rgba(14,165,233,0.08));
+  border-color: rgba(79,70,229,0.35);
+  color: var(--text-main);
+  box-shadow: var(--shadow-sm);
+}
+
+/* small controls */
+.tabs{ display:flex; gap:0.5rem; align-items:center; }
+.tabs button{ padding:0.4rem 0.7rem; border-radius:8px; background:transparent; border:1px solid transparent; font-weight:700; cursor:pointer; }
+.tabs button.active{ background:var(--text-main); color:white; border-color:var(--text-main); transform:translateY(-1px); }
+
+/* ---------- Stats grid ---------- */
+.stats-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-bottom:1.25rem; }
+.stat-card{ background:var(--bg-card); padding:1rem; border-radius:12px; display:flex; gap:1rem; align-items:center; border:1px solid var(--glass-border); box-shadow:var(--shadow-md); }
+.stat-icon{ width:48px;height:48px;border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+.stat-icon.blue{background:#dbeafe;color:#2563eb;} .stat-icon.green{background:#d1fae5;color:#059669;} .stat-icon.purple{background:#e0e7ff;color:#4f46e5;} .stat-icon.orange{background:#ffedd5;color:#ea580c;}
+.stat-info h3{font-size:1.25rem;font-weight:800;margin:0;} .stat-info p{font-size:0.85rem;color:var(--text-muted);font-weight:600;margin:0;}
+
+/* ---------- Alphabet filter ---------- */
+.alphabet-filter{ display:flex; gap:0.25rem; margin-bottom:1rem; overflow-x:auto; padding-bottom:0.5rem; -webkit-overflow-scrolling:touch; }
+.alphabet-filter::-webkit-scrollbar{ height:6px; }
+.alphabet-filter button{ min-width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:8px; font-weight:700; font-size:0.85rem; border:1px solid transparent; background:white; cursor:pointer; white-space:nowrap; }
+.alphabet-filter button.active{ background:var(--text-main); color:white; border-color:var(--text-main); }
+
+/* ---------- Cards grid ---------- */
+.cards-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:1rem; }
+
+/* card container - flexible (no fixed absolute height) */
+.card{
+  background: transparent;
   border-radius:12px;
-  animation:fadeIn .2s ease-in-out;
+  padding:0;
+  overflow:visible;
   position:relative;
+  min-height: var(--card-min-height);
+  perspective: 1200px;
+  display:block;
 }
-
-.modal-content input,
-.modal-content textarea,
-.modal-content select{
+.card-inner{
   width:100%;
-  padding:8px;
-  margin:8px 0;
-  border-radius:6px;
-  border:1px solid #ccc;
+  height:100%;
+  transition: transform 0.7s cubic-bezier(.2,.9,.2,1);
+  transform-style: preserve-3d;
+  position:relative;
+  min-height: inherit;
+  display:block;
 }
+.card.flipped .card-inner{ transform: rotateY(180deg); }
 
-.modal-content button{
-  width:100%;
-  padding:10px;
-  background:#3b82f6;
-  color:white;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-.close{
+/* faces */
+.card-face{
   position:absolute;
-  right:12px;
-  top:8px;
-  font-size:20px;
-  cursor:pointer;
+  inset:0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius:12px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  border:1px solid var(--glass-border);
+  box-shadow:var(--shadow-md);
+  background: var(--bg-card);
+  min-height: inherit;
 }
 
-@keyframes fadeIn{
-  from{transform:scale(.95);opacity:0}
-  to{transform:scale(1);opacity:1}
+/* back face rotated */
+.card-back{ transform: rotateY(180deg); padding:1rem; background: linear-gradient(180deg,#ffffff,#f7f7fb); }
+
+/* front header */
+.card .card-header{ height:40px; background:linear-gradient(135deg,#667eea 0%, #764ba2 100%); position:relative; display:flex; align-items:center; justify-content:center; }
+
+/* avatar overlaps header and body (right side) */
+.card-front .avatar{
+  position:absolute;
+  right:18px;
+  top:62px; /* overlaps header */
+  transform:translateY(-50%);
+  width:72px;
+  height:72px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  font-size:1.6rem;
+  color: var(--text-main);
+  background: #fbf9ec; /* subtle warm background like the example */
+  box-shadow: 0 10px 20px rgba(2,6,23,0.12);
+  border:6px solid rgba(255,255,255,0.95);
+  z-index: 5;
+}
+
+/* content area for front card */
+.card-front .card-body{
+  padding:18px 18px 14px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  align-items:flex-start; /* left-aligned content */
+}
+.card-face.card-front h3{ font-size:1.05rem; margin:0; font-weight:800; color:var(--text-main); text-align:left; width:100%; }
+.card-front .role{ font-size:0.92rem; color:var(--text-muted); font-weight:700; margin-top:0.15rem; text-align:left; width:100%; }
+
+/* info rows (icons) kept minimal on front */
+.card-front .info{ display:flex; flex-direction:column; gap:6px; margin-top:8px; color:var(--text-muted); font-weight:600; width:100%; }
+.card-front .info p{ display:flex; gap:0.6rem; align-items:center; margin:0; font-size:0.88rem; }
+.card-front .info i{ opacity:0.85; }
+
+/* footer row with status + view button */
+.card-front .card-footer{ display:flex; align-items:center; justify-content:space-between; padding:0 14px 14px 14px; width:100%; gap:8px; box-sizing:border-box; }
+.card-front .card-footer .view{ border-radius:8px; padding:0.45rem 0.7rem; font-weight:700; }
+
+/* other existing classes (kept) */
+.card h3{ text-align:center; margin:0.6rem 1rem 0; font-size:1.05rem; font-weight:800; color:var(--text-main); padding:0 1rem; line-height:1.2; }
+.card .role{ text-align:center; color:var(--text-muted); font-weight:700; margin-top:0.25rem; font-size:0.9rem; }
+
+/* Rest unchanged: info area scrollable if content is larger */
+.card .info{ padding:0.75rem 1rem; font-size:0.9rem; color:var(--text-muted); display:flex; flex-direction:column; gap:0.35rem; margin-top:0.5rem; flex:1; overflow:auto; -webkit-overflow-scrolling:touch; }
+.card .info p{ display:flex; gap:0.6rem; align-items:center; font-weight:600; color:var(--text-muted); margin:0; }
+.card .info p small{ color:var(--text-muted); font-weight:500; }
+
+/* action row at bottom (backface uses .card-back with its own layout) */
+.card .actions{ display:flex; gap:0.5rem; margin:0.75rem 1rem 1rem 1rem; }
+.card .actions button{ flex:1; padding:0.5rem; border-radius:8px; font-weight:700; font-size:0.9rem; }
+
+/* status indicator */
+.status-indicator{ display:inline-flex; gap:0.5rem; align-items:center; padding:0.35rem 0.6rem; border-radius:999px; font-weight:800; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; }
+.status-indicator.complete{ background: var(--status-complete-bg); color:#059669; }
+.status-indicator.incomplete{ background: var(--status-incomplete-bg); color:#ef4444; }
+
+/* card back grid */
+.back-grid{ display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-top:0.5rem; }
+.back-item{ background:rgba(0,0,0,0.02); padding:0.6rem; border-radius:8px; font-weight:700; color:var(--text-main); font-size:0.9rem; }
+
+/* empty state */
+.empty-state{ grid-column:1/-1; text-align:center; padding:3rem; color:white; background: linear-gradient(180deg, rgba(0,0,0,0.15), transparent); border-radius:12px; }
+
+/* ---------- Modal overlay & content ---------- */
+.modal-overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.45); z-index:1000; padding:1rem; }
+.modal-overlay.active{ display:flex; }
+.modal-content{ background:white; padding:1.25rem; border-radius:12px; width:90%; max-width:520px; box-shadow:var(--shadow-xl); max-height:85vh; overflow:auto; -webkit-overflow-scrolling:touch; }
+.modal-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
+.option-list{ display:flex; flex-direction:column; gap:0.5rem; max-height:320px; overflow:auto; -webkit-overflow-scrolling:touch; padding-right:0.25rem; }
+.option-btn{ text-align:left; padding:0.6rem 0.9rem; border-radius:8px; border:1px solid #e5e7eb; background:white; cursor:pointer; font-weight:700; }
+
+/* fallback message */
+#optionFallback{ display:none; color:#a00; padding:0.6rem; }
+
+/* ---------- Loading overlay ---------- */
+.loader{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:2000; background:rgba(255,255,255,0.9); flex-direction:column; }
+.loader .spinner{ width:50px; height:50px; border:4px solid #f3f3f3; border-top:4px solid var(--primary); border-radius:50%; animation:spin 1s linear infinite; }
+@keyframes spin{ 0%{ transform:rotate(0); } 100%{ transform:rotate(360deg); } }
+
+/* ---------- Small helpers ---------- */
+.hidden{ display:none !important; }
+.btn-ghost{ background:transparent; border:1px solid #e5e7eb; color:var(--text-main); }
+
+/* ---------- Accessibility & touch sizes ---------- */
+.btn-icon, .option-btn, .option-clear-top, .btn-option{ min-height:44px; min-width:44px; }
+button, select, input{ -webkit-user-select:none; -ms-user-select:none; user-select:none; }
+
+/* ---------- Responsive rules (breakpoints) ---------- */
+
+/* Very small phones */
+@media (max-width: 480px){
+  .app-container{ padding:1rem; }
+  .brand h1{ font-size:1rem; }
+  .brand-icon{ width:40px; height:40px; }
+  .search-box input{ width:140px; font-size:0.9rem; }
+  .alphabet-filter button{ min-width:30px; height:34px; font-size:0.78rem; padding:0.2rem; }
+  .cards-grid{ grid-template-columns: 1fr; gap:0.8rem; }
+  .card{ min-height: var(--card-min-height-mobile); }
+  .card .card-header{ height:60px; }
+  .modal-content{ width:100%; max-width:420px; margin:0 12px; }
+  .status-indicator{ font-size:0.65rem; padding:0.28rem 0.45rem; }
+  .controls-bar{ padding:0.75rem; gap:0.5rem; }
+  .controls-bar{ flex-direction:column; align-items:stretch; }
+  .controls-bar > div[style] { width:100%; display:flex; justify-content:space-between; gap:.5rem; }
+  .card-front .avatar{ right:12px; width:64px; height:64px; top:56px; font-size:1.25rem; border-width:5px; }
+}
+
+/* Small tablets & phablets */
+@media (min-width: 481px) and (max-width: 767px){
+  .search-box input{ width:160px; }
+  .cards-grid{ grid-template-columns: repeat(1, 1fr); }
+  .controls-bar{ flex-direction:column; align-items:stretch; }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 991px){
+  .cards-grid{ grid-template-columns: repeat(2, 1fr); }
+  .search-box input{ width:200px; }
+  .brand h1{ font-size:1.05rem; }
+}
+
+/* Laptop / small desktop */
+@media (min-width: 992px) and (max-width: 1279px){
+  .cards-grid{ grid-template-columns: repeat(2, 1fr); }
+  .search-box input{ width:240px; }
+}
+
+/* Desktop & wide */
+@media (min-width: 1280px){
+  .cards-grid{ grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .app-container{ max-width:var(--app-max-width); padding:2rem; }
+  .search-box input{ width:280px; }
+}
+
+/* make sure card-inner transitions are smooth for reduced motion users */
+@media (prefers-reduced-motion: reduce){
+  .card-inner{ transition:none !important; }
+}
+
+/* ---------- Minor tweaks for nicer behavior ---------- */
+/* keep infos scrollable but remove inner scrollbars until needed */
+.card .info::-webkit-scrollbar{ width:8px; height:8px; }
+.card .info::-webkit-scrollbar-thumb{ border-radius:8px; background: rgba(0,0,0,0.06); }
+
+/* ensure modal close area large enough on small screens */
+.modal-content .modal-header button{ font-size:1.1rem; line-height:1; padding:0.25rem 0.6rem; border-radius:8px; }
+
+/* make the "All" alphabet button slightly standout on load */
+.alphabet-filter button:first-child{ min-width:44px; font-weight:800; }
+
+/* Improve visual for active selects */
+select.active, .btn-option.active{ box-shadow: 0 4px 10px rgba(79,70,229,0.08); }
+
+/* ensure exported CSV link elements won't show */
+a[download]{ text-decoration:none; color:inherit; }
+
+/* End of stylesheet */
+
+/* === Card height compact override (paste at end of stylesheet) === */
+
+/* Lower the min-height for most screens and mobile */
+:root {
+  --card-min-height: 240px;         /* default compact height (was 300px) */
+  --card-min-height-mobile: 220px;  /* compact mobile height */
+}
+
+/* ensure card uses the new min-height */
+.card {
+  min-height: var(--card-min-height) !important;
+}
+
+/* Reduce header height so it doesn't push the card */
+.card .card-header {
+  height: 56px !important; /* was 90/72 depending on rules */
+}
+
+/* Make avatar smaller and reposition to fit visually */
+.card-front .avatar {
+  width: 56px !important;
+  height: 56px !important;
+  top: 50px !important;
+  right: 14px !important;
+  transform: translateY(-50%) !important;
+  font-size: 1.1rem !important;
+  border-width: 4px !important;
+}
+
+/* Tighter padding in front body and footer */
+.card-front .card-body {
+  padding: 12px 12px 10px 12px !important;
+}
+.card-front .card-footer {
+  padding: 0 12px 10px 12px !important;
+}
+
+/* Slightly smaller headline + role to save vertical space */
+.card-face.card-front h3,
+.card h3 {
+  font-size: 1.00rem !important; /* was ~1.05rem */
+  margin-top: 6px !important;
+}
+.card-front .role,
+.card .role {
+  font-size: 0.86rem !important; /* was ~0.9rem */
+  margin-top: 0.15rem !important;
+}
+
+/* Compact info rows */
+.card-front .info {
+  gap: 4px !important;
+  margin-top: 6px !important;
+  padding: 0 !important; /* use card-body padding instead */
+}
+.card .info p {
+  font-size: 0.86rem !important;
+}
+
+/* Reduce spacing on back items */
+.back-grid { gap: 0.4rem !important; }
+.back-item { padding: 0.5rem !important; font-size: 0.86rem !important; }
+
+/* Ensure mobile uses the mobile min-height */
+@media (max-width: 480px) {
+  :root { --card-min-height: var(--card-min-height-mobile); }
+  .card .card-header { height: 52px !important; }
+  .card-front .avatar { width: 52px !important; height: 52px !important; top: 48px !important; border-width:4px !important; }
+  .card h3 { font-size: 0.98rem !important; }
+  .card .role { font-size: 0.82rem !important; }
+}
+
+/* Keep info area scrollable so content doesn't expand the card */
+.card .info { overflow:auto; -webkit-overflow-scrolling: touch; }
+
+/* Optional: slightly tighter shadow to reduce perceived bulk */
+.card-face { box-shadow: 0 6px 12px rgba(2,6,23,0.06) !important; }
+
+
+/* Reduce side margins on very wide screens (e.g. 1920x1080) */
+@media (min-width: 1920px) {
+  /* increase max width so content fills more of the screen */
+  :root { --app-max-width: 1800px; }
+
+  /* tighten horizontal padding on the container */
+  .app-container{
+    max-width: var(--app-max-width);
+    padding-left: 1.25rem;   /* was 2rem */
+    padding-right: 1.25rem;  /* was 2rem */
+  }
+
+  /* optional: slightly reduce body side padding if you want even less outer gutter */
+  body {
+    padding-left: 0.5rem;    /* was 2rem (vertical remains controlled by padding shorthand) */
+    padding-right: 0.5rem;
+  }
 }
