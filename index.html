@@ -7,8 +7,226 @@
     <link href="style.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Login Screen Styles */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .login-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            animation: slideUp 0.6s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .login-container h2 {
+            color: #1a1a2e;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            font-size: 1.8rem;
+        }
+        
+        .login-container p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 1rem;
+        }
+        
+        .login-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .login-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+            font-weight: 600;
+        }
+        
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .login-footer {
+            margin-top: 2rem;
+            color: #999;
+            font-size: 0.85rem;
+        }
+        
+        /* App container initially hidden */
+        .app-container {
+            display: none;
+        }
+        
+        .app-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Logout button in header */
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
 </head>
 <body>
+
+    <!-- Login Screen -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-container">
+            <div class="login-icon">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <h2>RSU Alumni Portal</h2>
+            <p>Please sign in to access the management directory</p>
+            
+            <form class="login-form" id="loginForm">
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="username" class="login-input" placeholder="Username" autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" class="login-input" placeholder="Password">
+                </div>
+                <button type="submit" class="login-btn">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    Sign In
+                </button>
+                <div id="errorMessage" class="error-message">
+                    <i class="fa-solid fa-circle-exclamation"></i> Invalid username or password
+                </div>
+            </form>
+            
+            <div class="login-footer">
+                © 2025 RSU Alumni Management System
+            </div>
+        </div>
+    </div>
 
     <!-- Loading Screen -->
     <div id="loader" class="loader" style="display:none;">
@@ -16,7 +234,7 @@
         <p style="margin-top: 1rem; font-weight: 600; color: var(--text-main);">Loading Alumni Data...</p>
     </div>
 
-    <div class="app-container">
+    <div class="app-container" id="appContainer">
         <!-- Header -->
         <header>
             <div class="brand">
@@ -28,6 +246,11 @@
             </div>
 
             <div style="display:flex; gap:0.75rem; align-items:center;">
+                <!-- Logout Button -->
+                <button id="logoutBtn" class="logout-btn" title="Logout">
+                    <i class="fa-solid fa-sign-out-alt"></i> Logout
+                </button>
+                
                 <!-- sheetSelect already exists and is used as currentSheet selector -->
                 <select id="sheetSelect" class="active" style="font-weight:700;">
                     <option value="2025">Batch 2025</option>
@@ -132,6 +355,70 @@
     <button id="optionClearBtn" style="display:none;"></button>
 
     <script>
+    /* ====== LOGIN CONFIGURATION ====== */
+    const VALID_USERNAME = 'Cares';
+    const VALID_PASSWORD = 'caresST4ff';
+    
+    /* ====== LOGIN FUNCTIONALITY ====== */
+    const loginOverlay = document.getElementById('loginOverlay');
+    const loginForm = document.getElementById('loginForm');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const errorMessage = document.getElementById('errorMessage');
+    const appContainer = document.getElementById('appContainer');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    // Check if already logged in (session storage)
+    function checkLoginStatus() {
+        if (sessionStorage.getItem('isLoggedIn') === 'true') {
+            showApp();
+        }
+    }
+    
+    function showApp() {
+        loginOverlay.classList.add('hidden');
+        appContainer.classList.add('show');
+        // Initialize the app after login
+        init();
+    }
+    
+    function showLogin() {
+        loginOverlay.classList.remove('hidden');
+        appContainer.classList.remove('show');
+        usernameInput.value = '';
+        passwordInput.value = '';
+        errorMessage.classList.remove('show');
+    }
+    
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+        
+        if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+            sessionStorage.setItem('isLoggedIn', 'true');
+            errorMessage.classList.remove('show');
+            showApp();
+        } else {
+            errorMessage.classList.add('show');
+            passwordInput.value = '';
+            passwordInput.focus();
+        }
+    });
+    
+    // Logout functionality
+    logoutBtn.addEventListener('click', function() {
+        sessionStorage.removeItem('isLoggedIn');
+        showLogin();
+    });
+    
+    // Allow Enter key to submit
+    passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            loginForm.dispatchEvent(new Event('submit'));
+        }
+    });
+
     /* ====== CONFIG ====== */
     const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycby9v4ZZtrFj9KIDMM4SI5Psh1jDZqH0tqQxZpL-HewQ65Bb6HjOM_x9DzRhoJSuYFsz/exec';
 
@@ -898,12 +1185,15 @@
     });
 
     /* ---------- Init ---------- */
-    (function init(){
+    function init(){
       currentSheet = sheetSelect && sheetSelect.value && sheetSelect.value !== 'Alumni Management Directory' ? sheetSelect.value : '2025';
       buildAlphabet();
       // initial load (wrap in try/catch to avoid unhandled rejection in dev)
       reloadAll(currentSheet).catch(err => console.warn('Initial load error', err));
-    })();
+    }
+    
+    // Check login status on page load
+    checkLoginStatus();
     </script>
 </body>
 </html>
